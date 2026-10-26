@@ -14,6 +14,7 @@ import {
 	CONFIDENCE_STOPS,
 	DEFAULT_CONFIDENCE_INDEX,
 	emptyDockSelection,
+	isImeComposing,
 	normalizeOptions,
 	resolveCorrect,
 	seededRandom,
@@ -724,7 +725,8 @@ function QuestionDockForm({
 											// the payload is ready. Every Enter (shift or not — nothing
 											// else could ever happen in a one-line field) rides the
 											// same submit seam as the button, dictation finish-first
-											// included.
+											// included. An IME's confirming Enter is not a submit.
+											if (e.key === "Enter" && isImeComposing(e.nativeEvent)) return;
 											if (e.key === "Enter") {
 												e.preventDefault();
 												submit();
@@ -869,6 +871,8 @@ function QuestionDockForm({
 								}
 								// Chat convention: Enter submits, Shift+Enter is a newline;
 								// ⌘/Ctrl+Enter also submits (universal across the app).
+								// An IME's confirming Enter is not a submit.
+								if (e.key === "Enter" && isImeComposing(e.nativeEvent)) return;
 								if (e.key === "Enter" && (e.metaKey || e.ctrlKey || !e.shiftKey)) {
 									e.preventDefault();
 									submit();
@@ -899,6 +903,8 @@ function QuestionDockForm({
 								// THE STANDARD CHORD (owner round 5, 2026-10-05): Enter
 								// submits, Shift+Enter is a newline, ⌘/Ctrl+Enter works
 								// too — identical to the practice dock and the composer.
+								// An IME's confirming Enter is not a submit.
+								if (e.key === "Enter" && isImeComposing(e.nativeEvent)) return;
 								if (e.key === "Enter" && (!e.shiftKey || e.metaKey || e.ctrlKey)) {
 									e.preventDefault();
 									submit();

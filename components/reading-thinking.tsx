@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import { joinDictation, useDictationTarget } from "@/components/dictation";
+import { isImeComposing } from "@/src/core";
 
 /**
  * The reading-thinking field (owner design 2026-10-03, "two questions per
@@ -80,6 +81,8 @@ export function ReadingThinkingField({
 					// (and the universal ⌘/Ctrl+Enter) opens it — the dictation
 					// flush lands HERE first via the caller's finishDictation,
 					// so spoken thoughts ride along. Shift+Enter stays a newline.
+					// An IME's confirming Enter is neither an open nor a blur.
+					if (e.key === "Enter" && isImeComposing(e.nativeEvent)) return;
 					if (e.key === "Enter" && onOpen !== undefined && (!e.shiftKey || e.metaKey || e.ctrlKey)) {
 						e.preventDefault();
 						e.stopPropagation();

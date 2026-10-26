@@ -12,7 +12,7 @@ import { DictationBar, joinDictation, useDictation } from "@/components/dictatio
 import { useFieldCycle } from "@/components/field-cycle";
 import { SidebarToggle } from "@/components/sidebar";
 import { StatsBar } from "@/components/stats-bar";
-import type { TurnUsage } from "@/src/core";
+import { isImeComposing, type TurnUsage } from "@/src/core";
 
 /**
  * Home — the knowledge graph is the main view, full-bleed edge to edge
@@ -265,6 +265,8 @@ export function Home({
 								dictation.cancel();
 								return;
 							}
+							// An IME's confirming Enter is not a start.
+							if (e.key === "Enter" && isImeComposing(e.nativeEvent)) return;
 							if (e.key === "Enter" && !e.shiftKey) {
 								e.preventDefault();
 								void start();

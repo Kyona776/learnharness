@@ -185,6 +185,14 @@ export function isTypingSurface(e: KeyboardEvent): boolean {
 	return target.isContentEditable;
 }
 
+/** True while an IME is composing (Japanese/Chinese/Korean input): the
+ *  Enter that confirms a conversion candidate belongs to the IME, never to
+ *  a submit. Chromium/Firefox flag it with isComposing; Safari fires that
+ *  keydown after compositionend (isComposing false) but keeps keyCode 229. */
+export function isImeComposing(e: KeyboardEvent): boolean {
+	return e.isComposing || e.keyCode === 229;
+}
+
 /** macOS styling for binding display ("⌘D", "⇧⇥", "⌥↑"). */
 export const IS_MAC =
 	typeof navigator !== "undefined" && /mac/i.test(navigator.platform || navigator.userAgent);

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { joinDictation, useDictationTarget } from "@/components/dictation";
 import { useEnterSubmits } from "@/components/enter-submits";
 import { cn } from "@/lib/utils";
+import { isImeComposing } from "@/src/core";
 
 /**
  * The practice dock (practice sessions, owner design 2026-10-04): an
@@ -138,6 +139,8 @@ export function PracticeDock({ problemCallId, input, expanded, onExpand, onSubmi
 						}
 						// Enter SENDS — the single lane (owner round 2, 2026-10-05);
 						// Shift+Enter is the newline, ⌘/Ctrl+Enter the chord too.
+						// An IME's confirming Enter is not a submit.
+						if (e.key === "Enter" && isImeComposing(e.nativeEvent)) return;
 						if (e.key === "Enter" && (!e.shiftKey || e.metaKey || e.ctrlKey)) {
 							e.preventDefault();
 							submit();
